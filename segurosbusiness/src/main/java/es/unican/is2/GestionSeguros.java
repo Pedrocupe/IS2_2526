@@ -5,7 +5,16 @@ import java.util.List;
 
 public class GestionSeguros implements IGestionClientes, IInfoSeguros, IGestionSeguros {
     
-    public GestionSeguros(IClientesDAO cDao,ISegurosDAO sDao);
+    List<Cliente> clientes = new ArrayList<Cliente>();
+    List<Seguro> seguros = new ArrayList<Seguro>();
+
+    IClientesDAO cDao;
+    ISegurosDAO sDao;
+    
+    public GestionSeguros(IClientesDAO cDao,ISegurosDAO sDao) {
+        this.cDao = cDao;
+        this.sDao = sDao;
+    }
 
     @Override
     /**
@@ -16,7 +25,13 @@ public class GestionSeguros implements IGestionClientes, IInfoSeguros, IGestionS
 	  * @throws DataAccessException si se produce un error 
 	 * en el acceso a la base de datos
 	 */
-	public Cliente nuevoCliente(Cliente c) throws DataAccessException;
+	public Cliente nuevoCliente(Cliente c) throws DataAccessException {
+        if (cDao.cliente(c.getDni()) != null) {
+            return null;
+        }
+        cDao.creaCliente(c);
+        return c;
+    }
 	
     @Override
 	/**
@@ -27,7 +42,9 @@ public class GestionSeguros implements IGestionClientes, IInfoSeguros, IGestionS
 	 * @throws DataAccessException si se produce un error 
 	 * en el acceso a la base de datos
 	 */
-	public Cliente cliente(String dni) throws DataAccessException;
+	public Cliente cliente(String dni) throws DataAccessException {
+        return cDao.cliente(dni);
+    }
 
     @Override
     /**
@@ -38,7 +55,9 @@ public class GestionSeguros implements IGestionClientes, IInfoSeguros, IGestionS
 	* @throws DataAccessException si se produce un error 
 	 * en el acceso a la base de datos
 	 */
-	public Seguro seguro(String matricula) throws DataAccessException;
+	public Seguro seguro(String matricula) throws DataAccessException {
+        return sDao.seguroPorMatricula(matricula);
+    }
 	
     @Override
 	/**
@@ -49,7 +68,12 @@ public class GestionSeguros implements IGestionClientes, IInfoSeguros, IGestionS
 	 * @throws DataAccessException si se produce un error 
 	 * en el acceso a la base de datos
 	 */
-	public Cliente bajaCliente(String dni) throws DataAccessException;
+	public Cliente bajaCliente(String dni) throws DataAccessException {
+        if (cDao.cliente(dni) != null) {
+            return cDao.eliminaCliente(dni);
+        }
+        return null;
+    }
    
     @Override
     /**
@@ -62,7 +86,19 @@ public class GestionSeguros implements IGestionClientes, IInfoSeguros, IGestionS
 	 * @throws DataAccessException si se produce un error 
 	 * en el acceso a la base de datos
 	 */
-	public Seguro nuevoSeguro(Seguro s, String dni) throws OperacionNoValida, DataAccessException;
+	public Seguro nuevoSeguro(Seguro s, String dni) throws OperacionNoValida, DataAccessException {
+        if (sDao.seguro(s.getId()) != null) {
+            throw new OperacionNoValida("Seguro ya existente");
+        } 
+        Cliente c = cDao.cliente(dni);
+        if (c == null) {
+            return null;
+        }
+        List<Seguro> seguros = c.getSeguros();
+        seguros.add(s);
+        c.setSeguros(seguros);
+        return s;
+    }
 	
     @Override
 	/**
@@ -76,7 +112,26 @@ public class GestionSeguros implements IGestionClientes, IInfoSeguros, IGestionS
 	 * @throws DataAccessException si se produce un error 
 	 * en el acceso a la base de datos
 	 */
-	public Seguro bajaSeguro(String matricula, String dni) throws OperacionNoValida, DataAccessException;
+	public Seguro bajaSeguro(String matricula, String dni) throws OperacionNoValida, DataAccessException {
+        
+        //Si el seguro no existe -> null
+        Seguro s = sDao.seguroPorMatricula(matricula);
+        if (s == null) {
+            return null;
+        } 
+
+        Cliente c = cDao.cliente(dni);
+        if (c == null) {
+            return null;
+        }
+        List<Seguro> seguros = c.getSeguros();
+        if (!seguros.contains(s)) {
+            throw new OperacionNoValida("El seguro no pertenece al dni indicado");
+        }
+        seguros.remove(s);
+        c.setSeguros(seguros);
+        return s;
+    }
 
     @Override
 	/**
@@ -88,5 +143,15 @@ public class GestionSeguros implements IGestionClientes, IInfoSeguros, IGestionS
 	 * @throws DataAccessException si se produce un error 
 	 * en el acceso a la base de datos
 	 */
-	public Seguro anhadeConductorAdicional(String matricula, String conductor) throws DataAccessException;
+	public Seguro anhadeConductorAdicional(String matricula, String conductor) throws DataAccessException {
+        Seguro s = sDao.seguroPorMatricula(matricula);
+        if (s == null) {
+            return null;
+        } 
+        s.setConductorAdicional(conductor);
+        return s;
+    }
+
+
+
 }

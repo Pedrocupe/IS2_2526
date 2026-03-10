@@ -1,6 +1,5 @@
 package es.unican.is2;
 
-
 import java.time.LocalDate;
 
 /**
@@ -117,7 +116,30 @@ public class Seguro {
 	 *         0 si el seguro todavía no está en vigor (no se ha alcanzado su fecha de inicio)
      */
 	public double precio() {
-		return 0;
-	}
+        // Si aún no ha empezado el seguro, precio = 0
+        if (fechaInicio != null && LocalDate.now().isBefore(fechaInicio)) return 0;
+
+        // Precio  según la cobertura del seguro
+        double precio = 0;
+        if (cobertura == Cobertura.TODO_RIESGO) {
+			precio = 1000;
+		} else if (cobertura == Cobertura.TERCEROS_LUNAS) {
+			precio = 600;
+		} else if (cobertura == Cobertura.TERCEROS) {
+			precio = 400;
+		}
+        // Incremento por potencia (multiplicamos directamente por 1.05 o 1.20)
+        if (potencia >= 90 && potencia <= 110) {
+			precio *= 1.05;
+		} else if (potencia > 110) {
+			precio *= 1.20;
+		}
+        // Descuento del 20% en el primer año (multiplicamos por 0.80)
+        if (fechaInicio != null && LocalDate.now().isBefore(fechaInicio.plusYears(1))) {
+            precio *= 0.80;
+        }
+
+        return precio;
+    }
 	
 }
