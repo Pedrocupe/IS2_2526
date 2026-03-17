@@ -27,8 +27,9 @@ public class ClientesDAO implements IClientesDAO {
 	public Cliente cliente(String dni) throws DataAccessException {
 		Cliente result = null; 
 		Connection con = H2ServerConnectionManager.getConnection();
+		Statement statement = null;
 		try {
-			Statement statement = con.createStatement();
+			statement = con.createStatement();
 			String statementText = "select * from Clientes where dni = '"+ dni+"'";
 			ResultSet results = statement.executeQuery(statementText);
 			if (results.next()) { 
@@ -39,6 +40,15 @@ public class ClientesDAO implements IClientesDAO {
 		catch (SQLException e) {
 			e.printStackTrace();
 			throw new DataAccessException();
+			
+		} finally {
+			try {
+				if (con != null) con.close();
+				if (statement != null) statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					throw new DataAccessException();	
+			}
 		}
 		return result;
 	}
