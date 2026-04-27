@@ -6,11 +6,9 @@ import java.time.LocalDate;
 
 public class SegurosTest {
 
-    // ==========================================
     // 1. TESTS PARA LA FUNCIÓN: PRECIO TOTAL
     // PARÁMETRO: POTENCIA
     // (Fijamos Cobertura: TERCEROS = 400.0, Fecha: Antigua = Sin descuento)
-    // ==========================================
 
     @Test
     public void testPrecio_PotenciaNormal_LimiteInferior() {
@@ -94,12 +92,9 @@ public class SegurosTest {
         assertEquals(400.0, seguro.precio(), 0.001);
     }
 
-
-    // ==========================================
     // 2. TESTS PARA LA FUNCIÓN: PRECIO TOTAL
     // PARÁMETRO: COBERTURA
     // (Fijamos Potencia: 89 = Sin recargo, Fecha: Antigua = Sin descuento)
-    // ==========================================
 
     @Test
     public void testPrecio_CoberturaTodoRiesgo() {
@@ -137,14 +132,11 @@ public class SegurosTest {
         assertEquals(0.0, seguro.precio(), 0.001);
     }
 
-
-    // ==========================================
     // 3. TESTS PARA LA FUNCIÓN: PRECIO TOTAL
     // PARÁMETRO: FECHA INICIO
     // (Fijamos Cobertura: TERCEROS = 400.0, Potencia: 89 = Sin recargo)
-    // ==========================================
 
-    // --- Bloque 1: Recientes (Descuento 20% -> 400 * 0.8 = 320.0) ---
+    // Bloque 1: Recientes (Descuento 20% -> 400 * 0.8 = 320.0)
     @Test
     public void testPrecio_FechaReciente_LimiteInferior() {
         Seguro seguro = new Seguro();
@@ -172,7 +164,7 @@ public class SegurosTest {
         assertEquals(320.0, seguro.precio(), 0.001);
     }
 
-    // --- Bloque 2: Antiguos (Sin descuento -> 400.0) ---
+    // Bloque 2: Antiguos (Sin descuento -> 400.0)
     @Test
     public void testPrecio_FechaAntigua_LimiteSuperior() {
         Seguro seguro = new Seguro();
@@ -191,7 +183,7 @@ public class SegurosTest {
         assertEquals(400.0, seguro.precio(), 0.001);
     }
 
-    // --- Bloque 3: Futuro (Precio = 0.0) ---
+    // Bloque 3: Futuro (Precio = 0.0)
     @Test
     public void testPrecio_FechaFutura_LimiteInferior() {
         Seguro seguro = new Seguro();

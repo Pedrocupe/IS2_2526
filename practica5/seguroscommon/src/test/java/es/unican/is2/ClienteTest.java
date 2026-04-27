@@ -10,8 +10,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public class ClienteTest {
-
-    // --- MÉTODOS AUXILIARES PARA CREAR SEGUROS DE PRUEBA ---
     
     // Crea un seguro con precio fijo de 400.0 (Terceros, potencia normal, antiguo)
     private Seguro crearSeguroTerceros() {
@@ -31,9 +29,7 @@ public class ClienteTest {
         return s;
     }
 
-    // ==========================================
     // 1. TESTS SIN MINUSVALÍA (No hay descuento)
-    // ==========================================
 
     @Test
     public void testTotalSeguros_SinMinusvalia_SinSeguros() {
@@ -69,9 +65,7 @@ public class ClienteTest {
         assertEquals(1000.0, cliente.totalSeguros(), 0.001); // 400 + 600
     }
 
-    // ==========================================
     // 2. TESTS CON MINUSVALÍA (Descuento del 25%)
-    // ==========================================
 
     @Test
     public void testTotalSeguros_ConMinusvalia_SinSeguros() {
@@ -91,8 +85,6 @@ public class ClienteTest {
         seguros.add(crearSeguroTerceros()); // Cuesta 400
         cliente.setSeguros(seguros);
         
-        // ¡OJO! Este test va a fallar (saldrá rojo) hasta que corrijas el código.
-        // 400 - 25% = 300.0
         assertEquals(300.0, cliente.totalSeguros(), 0.001);
     }
 
@@ -106,14 +98,10 @@ public class ClienteTest {
         seguros.add(crearSeguroTercerosLunas()); // Cuesta 600
         cliente.setSeguros(seguros);
         
-        // ¡OJO! Este test también fallará.
-        // 1000 - 25% = 750.0
         assertEquals(750.0, cliente.totalSeguros(), 0.001);
     }
 
-    // ==========================================
     // 3. TEST DE CLASE NO VÁLIDA (Lista null)
-    // ==========================================
 
     @Test
     public void testTotalSeguros_ListaNula() {
