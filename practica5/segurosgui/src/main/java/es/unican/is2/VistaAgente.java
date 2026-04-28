@@ -13,6 +13,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JList;
 import javax.swing.border.LineBorder;
 
+import es.unican.is2.Seguro.PotenciaInvalidaException;
+
 import java.awt.Color;
 import javax.swing.JButton;
 
@@ -111,6 +113,7 @@ public class VistaAgente extends JFrame {
 	}
 
 	private void rellenaDatosCliente(String dni) {
+		System.out.println("INFO = " + info);
 		Cliente c;
 		try {
 			c = info.cliente(dni);
