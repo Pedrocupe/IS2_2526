@@ -1,215 +1,102 @@
 package es.unican.is2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.Test;
+
 import java.time.LocalDate;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SegurosTest {
 
-    // 1. TESTS PARA LA FUNCIÓN: PRECIO TOTAL
-    // PARÁMETRO: POTENCIA
-    // (Fijamos Cobertura: TERCEROS = 400.0, Fecha: Antigua = Sin descuento)
+    private Seguro seguro;
 
-    @Test
-    public void testPrecio_PotenciaNormal_LimiteInferior() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS); 
-        seguro.setFechaInicio(LocalDate.now().minusYears(2)); 
-        seguro.setPotencia(1); // Límite inferior
-        assertEquals(400.0, seguro.precio(), 0.001);
+    @BeforeEach
+    public void setUp() {
+        seguro = new Seguro();
     }
 
     @Test
-    public void testPrecio_PotenciaNormal_Medio() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setFechaInicio(LocalDate.now().minusYears(2));
-        seguro.setPotencia(45); // Medio
-        assertEquals(400.0, seguro.precio(), 0.001);
-    }
-
-    @Test
-    public void testPrecio_PotenciaNormal_LimiteSuperior() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setFechaInicio(LocalDate.now().minusYears(2));
-        seguro.setPotencia(89); // Límite superior
-        assertEquals(400.0, seguro.precio(), 0.001);
-    }
-
-    @Test
-    public void testPrecio_PotenciaRecargo5_LimiteInferior() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setFechaInicio(LocalDate.now().minusYears(2));
-        seguro.setPotencia(90); // Límite inferior (Recargo 5%)
-        assertEquals(420.0, seguro.precio(), 0.001);
-    }
-
-    @Test
-    public void testPrecio_PotenciaRecargo5_Medio() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setFechaInicio(LocalDate.now().minusYears(2));
-        seguro.setPotencia(100); // Medio (Recargo 5%)
-        assertEquals(420.0, seguro.precio(), 0.001);
-    }
-
-    @Test
-    public void testPrecio_PotenciaRecargo5_LimiteSuperior() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setFechaInicio(LocalDate.now().minusYears(2));
-        seguro.setPotencia(110); // Límite superior (Recargo 5%)
-        assertEquals(420.0, seguro.precio(), 0.001);
-    }
-
-    @Test
-    public void testPrecio_PotenciaRecargo20_LimiteInferior() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setFechaInicio(LocalDate.now().minusYears(2));
-        seguro.setPotencia(111); // Límite inferior (Recargo 20%)
-        assertEquals(480.0, seguro.precio(), 0.001);
-    }
-
-    @Test
-    public void testPrecio_PotenciaRecargo20_Medio() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setFechaInicio(LocalDate.now().minusYears(2));
-        seguro.setPotencia(200); // Medio (Recargo 20%)
-        assertEquals(480.0, seguro.precio(), 0.001);
-    }
-
-    @Test
-    public void testPrecio_PotenciaInvalida() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setFechaInicio(LocalDate.now().minusYears(2));
-        seguro.setPotencia(0); // No válido
-        // El código actual ignora el 0 y cobra el precio base
-        assertEquals(400.0, seguro.precio(), 0.001);
-    }
-
-    // 2. TESTS PARA LA FUNCIÓN: PRECIO TOTAL
-    // PARÁMETRO: COBERTURA
-    // (Fijamos Potencia: 89 = Sin recargo, Fecha: Antigua = Sin descuento)
-
-    @Test
-    public void testPrecio_CoberturaTodoRiesgo() {
-        Seguro seguro = new Seguro();
-        seguro.setPotencia(89);
-        seguro.setFechaInicio(LocalDate.now().minusYears(2));
+    public void testPrecio_CasosValidos() {
+        
+        // 1. fechaActual - 1 año + 1 día, TODO_RIESGO, 1
+        seguro.setFechaInicio(LocalDate.now().minusYears(1).plusDays(1));
         seguro.setCobertura(Cobertura.TODO_RIESGO);
-        assertEquals(1000.0, seguro.precio(), 0.001);
-    }
+        seguro.setPotencia(1);
+        assertEquals(800.0, seguro.precio(), 0.001);
 
-    @Test
-    public void testPrecio_CoberturaTercerosLunas() {
-        Seguro seguro = new Seguro();
-        seguro.setPotencia(89);
-        seguro.setFechaInicio(LocalDate.now().minusYears(2));
+        // 2. fechaActual - 6 meses, TERCEROS_LUNAS, 90
+        seguro.setFechaInicio(LocalDate.now().minusMonths(6));
         seguro.setCobertura(Cobertura.TERCEROS_LUNAS);
-        assertEquals(600.0, seguro.precio(), 0.001);
-    }
+        seguro.setPotencia(90);
+        assertEquals(504.0, seguro.precio(), 0.001);
 
-    @Test
-    public void testPrecio_CoberturaTerceros() {
-        Seguro seguro = new Seguro();
-        seguro.setPotencia(89);
-        seguro.setFechaInicio(LocalDate.now().minusYears(2));
+        // 3. fechaActual, TERCEROS, 111
+        seguro.setFechaInicio(LocalDate.now());
         seguro.setCobertura(Cobertura.TERCEROS);
-        assertEquals(400.0, seguro.precio(), 0.001);
-    }
+        seguro.setPotencia(111);
+        assertEquals(384.0, seguro.precio(), 0.001);
 
-    @Test
-    public void testPrecio_CoberturaInvalida() {
-        Seguro seguro = new Seguro();
-        seguro.setPotencia(89);
-        seguro.setFechaInicio(LocalDate.now().minusYears(2));
-        seguro.setCobertura(null); // No válido
+        // 4. fechaActual - 3 años, TODO_RIESGO, 50
+        seguro.setFechaInicio(LocalDate.now().minusYears(3));
+        seguro.setCobertura(Cobertura.TODO_RIESGO);
+        seguro.setPotencia(50);
+        assertEquals(1000.0, seguro.precio(), 0.001);
+
+        // 5. fechaActual - 1 año, TERCEROS_LUNAS, 100
+        seguro.setFechaInicio(LocalDate.now().minusYears(1));
+        seguro.setCobertura(Cobertura.TERCEROS_LUNAS);
+        seguro.setPotencia(100);
+        assertEquals(630.0, seguro.precio(), 0.001);
+
+        // 6. fechaActual + 1 día, TERCEROS, 125
+        seguro.setFechaInicio(LocalDate.now().plusDays(1));
+        seguro.setCobertura(Cobertura.TERCEROS);
+        seguro.setPotencia(125);
         assertEquals(0.0, seguro.precio(), 0.001);
-    }
 
-    // 3. TESTS PARA LA FUNCIÓN: PRECIO TOTAL
-    // PARÁMETRO: FECHA INICIO
-    // (Fijamos Cobertura: TERCEROS = 400.0, Potencia: 89 = Sin recargo)
-
-    // Bloque 1: Recientes (Descuento 20% -> 400 * 0.8 = 320.0)
-    @Test
-    public void testPrecio_FechaReciente_LimiteInferior() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
+        // 7. fechaActual + 1 año, TODO_RIESGO, 89
+        seguro.setFechaInicio(LocalDate.now().plusYears(1));
+        seguro.setCobertura(Cobertura.TODO_RIESGO);
         seguro.setPotencia(89);
-        seguro.setFechaInicio(LocalDate.now().minusYears(1).plusDays(1)); // Límite inferior
-        assertEquals(320.0, seguro.precio(), 0.001);
-    }
-
-    @Test
-    public void testPrecio_FechaReciente_Medio() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setPotencia(89);
-        seguro.setFechaInicio(LocalDate.now().minusMonths(6)); // Medio
-        assertEquals(320.0, seguro.precio(), 0.001);
-    }
-
-    @Test
-    public void testPrecio_FechaReciente_LimiteSuperior() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setPotencia(89);
-        seguro.setFechaInicio(LocalDate.now()); // Límite superior (Hoy)
-        assertEquals(320.0, seguro.precio(), 0.001);
-    }
-
-    // Bloque 2: Antiguos (Sin descuento -> 400.0)
-    @Test
-    public void testPrecio_FechaAntigua_LimiteSuperior() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setPotencia(89);
-        seguro.setFechaInicio(LocalDate.now().minusYears(1)); // Límite superior (Justo 1 año)
-        assertEquals(400.0, seguro.precio(), 0.001);
-    }
-
-    @Test
-    public void testPrecio_FechaAntigua_Medio() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setPotencia(89);
-        seguro.setFechaInicio(LocalDate.now().minusYears(2)); // Medio
-        assertEquals(400.0, seguro.precio(), 0.001);
-    }
-
-    // Bloque 3: Futuro (Precio = 0.0)
-    @Test
-    public void testPrecio_FechaFutura_LimiteInferior() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setPotencia(89);
-        seguro.setFechaInicio(LocalDate.now().plusDays(1)); // Límite inferior (Mañana)
         assertEquals(0.0, seguro.precio(), 0.001);
+
+        // 8. fechaActual, TERCEROS_LUNAS, 110
+        seguro.setFechaInicio(LocalDate.now());
+        seguro.setCobertura(Cobertura.TERCEROS_LUNAS);
+        seguro.setPotencia(110);
+        assertEquals(504.0, seguro.precio(), 0.001);
     }
 
     @Test
-    public void testPrecio_FechaFutura_Medio() {
-        Seguro seguro = new Seguro();
+    public void testPrecio_CasosNoValidos() {
+        
+        // 1. null, TERCEROS, 1
+        seguro.setFechaInicio(null);
         seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setPotencia(89);
-        seguro.setFechaInicio(LocalDate.now().plusYears(1)); // Medio
-        assertEquals(0.0, seguro.precio(), 0.001);
-    }
+        seguro.setPotencia(1);
 
-    // --- Bloque 4: No válido ---
-    @Test
-    public void testPrecio_FechaInvalida() {
-        Seguro seguro = new Seguro();
-        seguro.setCobertura(Cobertura.TERCEROS);
-        seguro.setPotencia(89);
-        seguro.setFechaInicio(null); // No válido
-        // El código ignora el null en las comprobaciones de fechas y aplica el precio normal
         assertEquals(400.0, seguro.precio(), 0.001);
+
+        // 2. fechaActual, null, 90
+        seguro.setFechaInicio(LocalDate.now());
+        seguro.setCobertura(null);
+        seguro.setPotencia(90);
+    
+        assertEquals(0.0, seguro.precio(), 0.001);
+
+        // 3. fechaActual - 3 años, TODO_RIESGO, 0
+        seguro.setFechaInicio(LocalDate.now().minusYears(3));
+        seguro.setCobertura(Cobertura.TODO_RIESGO);
+        seguro.setPotencia(0);
+        
+        assertEquals(1000.0, seguro.precio(), 0.001);
+
+        // 4. fechaActual + 1 día, TERCEROS_LUNAS, -15
+        seguro.setFechaInicio(LocalDate.now().plusDays(1));
+        seguro.setCobertura(Cobertura.TERCEROS_LUNAS);
+        seguro.setPotencia(-15);
+
+        assertEquals(0.0, seguro.precio(), 0.001);
     }
 }
