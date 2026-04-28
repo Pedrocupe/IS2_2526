@@ -64,6 +64,7 @@ public class VistaAgente extends JFrame {
 		
 		listSeguros = new JList<String>();
 		listSeguros.setBounds(230, 98, 180, 116);
+		listSeguros.setName("listSeguros");
 		contentPane.add(listSeguros);
 		listSeguros.setBorder(new LineBorder(new Color(0, 0, 0)));
 		listSeguros.setModel(listModel);
@@ -100,7 +101,7 @@ public class VistaAgente extends JFrame {
 		btnBuscar = new JButton("Buscar");
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				rellenaDatosCliente(txtNombreCliente.getText());
+				rellenaDatosCliente(txtDniCliente.getText());
 			}
 		});
 		btnBuscar.setBounds(21, 122, 89, 23);
@@ -121,7 +122,7 @@ public class VistaAgente extends JFrame {
 				listModel.addElement(v.getMatricula() + " "+v.getCobertura());
 			}
 		} else {
-			txtNombreCliente.setText("Error en BBDD");
+			txtNombreCliente.setText("DNI No Valido");
 			txtTotalCliente.setText("");
 			listModel.removeAllElements();
 		}
@@ -131,6 +132,5 @@ public class VistaAgente extends JFrame {
 			txtTotalCliente.setText("");
 			listModel.removeAllElements();
 		}
-		
 	}
 }
