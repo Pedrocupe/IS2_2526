@@ -21,12 +21,13 @@ public class ConjuntoOrdenado<E extends Comparable<E>> implements IConjuntoOrden
 			throw new NullPointerException();
 		
 		// DEPURACIÓN DE CÓDIGO, tras ejecutar caja negra. Si ya existe, devolvemos false y no lo añadimos 
-        if (lista.contains(elemento)) {
+       	if (lista.contains(elemento)) {
             return false;
         }
 		
+		// Cambiamos el menor que por mayor que para que la lista se ordene de manera natural (de menor a mayor)
 		if (lista.size() != 0) {
-			while (indice < lista.size() && elemento.compareTo(lista.get(indice)) < 0) {
+			while (indice < lista.size() && elemento.compareTo(lista.get(indice)) > 0) {
 				indice++;
 			}
 		}
