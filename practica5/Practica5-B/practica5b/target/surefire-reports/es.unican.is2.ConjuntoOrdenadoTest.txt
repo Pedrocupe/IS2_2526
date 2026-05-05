@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: es.unican.is2.ConjuntoOrdenadoTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.051 s -- in es.unican.is2.ConjuntoOrdenadoTest
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.130 s -- in es.unican.is2.ConjuntoOrdenadoTest

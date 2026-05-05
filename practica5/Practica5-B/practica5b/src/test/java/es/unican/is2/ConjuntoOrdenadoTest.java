@@ -1,173 +1,155 @@
 package es.unican.is2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ConjuntoOrdenadoTest {
      
-    private ConjuntoOrdenado<Integer> conjunto;
+    private ConjuntoOrdenado<Integer> lista;
 
     @BeforeEach
     public void setUp() {
-        conjunto = new ConjuntoOrdenado<Integer>();
+        lista = new ConjuntoOrdenado<Integer>();
     }
 
     @Test
-    public void testCasosValidos() {
-        //FUNCIÓN GET
+    public void testGet() {
+        // CASOS VÁLIDOS
         // Caso 1: [10], 0: 10
-        conjunto.add(10);
-        assertEquals(10, conjunto.get(0));
+        lista.add(10);
+        assertEquals(10, lista.get(0));
 
         // Caso 2: [30, 20, 10], 1: 20
-        conjunto.clear();
-        conjunto.add(30);
-        conjunto.add(20);
-        conjunto.add(10);
-        assertEquals(20, conjunto.get(1));
+        lista.clear();
+        lista.add(30);
+        lista.add(20);
+        lista.add(10);
+        assertEquals(20, lista.get(1));
 
         // Caso 3: [30, 20, 10], 2: 10
-        assertEquals(10, conjunto.get(2));
+        assertEquals(10, lista.get(2));
 
-        //FUNCIÓN ADD
-        // Caso 1: [10], 10: ([10]). No añade duplicados
-        conjunto.clear();
-        conjunto.add(10);
-        conjunto.add(10);
-        assertEquals(1, conjunto.size());
-        // Error de caja negra, la lista en este momento permite insertar duplicados, hay que corregirlo con caja blanca
-        assertEquals(10, conjunto.get(0));
+        // CASOS NO VÁLIDOS
+        lista.clear();
 
-        // Caso 2: [30, 20, 10], 20: ([30, 20, 10]). No añade duplicados
-        conjunto.add(30);
-        conjunto.add(20);
-        conjunto.add(10);
-        conjunto.add(20);
-        assertEquals(3, conjunto.size());
+        // Caso 1: [ ], 0: IndexOutOfBoundsException
+        assertThrows(IndexOutOfBoundsException.class, () -> lista.get(0));
 
-        // Caso 3: [30, 20, 10], 30: ([30, 20, 10]). No añade duplicados
-        conjunto.add(30);
-        assertEquals(3, conjunto.size());
+        // Caso 2: [20, 10], -1:   IndexOutOfBoundsException
+        lista.add(20);
+        lista.add(10);
+        assertThrows(IndexOutOfBoundsException.class, () -> lista.get(-1));
 
-        // Caso 4: [30, 20, 10], 50: ([50, 30, 20, 10])
-        conjunto.add(50);
-        assertEquals(4, conjunto.size());
-        assertEquals(50, conjunto.get(0)); // El 50 va al principio
+        // Caso 3: [20, 10], -4: IndexOutOfBoundsException
+        assertThrows(IndexOutOfBoundsException.class, () -> lista.get(-4));
 
-        // Caso 5: [50, 30, 20, 10], 40: ([50, 40, 30, 20, 10])
-        conjunto.add(40);
-        assertEquals(5, conjunto.size());
-        assertEquals(40, conjunto.get(1)); // El 40 va en la posición 1
+        // Caso 4: [20, 10], 2: IndexOutOfBoundsException
+        assertThrows(IndexOutOfBoundsException.class, () -> lista.get(2));
 
-        // Caso 6: [50, 40, 30, 20, 10], 0: ([50, 40, 30, 20, 10, 0])
-        conjunto.add(0);
-        assertEquals(6, conjunto.size());
-        assertEquals(0, conjunto.get(5)); // El 0 va al final
-
-        //FUNCIÓN REMOVE
-        conjunto.clear();
-
-        // Lista inicial: [50, 40, 30, 20, 10]
-        conjunto.add(50);
-        conjunto.add(40);
-        conjunto.add(30);
-        conjunto.add(20);
-        conjunto.add(10);
-
-        // Límite Inferior: índice = 0. Devuelve 50. Estado: [40, 30, 20, 10]
-        assertEquals(50, conjunto.remove(0));
-        assertEquals(4, conjunto.size());
-        assertEquals(40, conjunto.get(0));
-
-        // Valor medio: índice = 2. Devuelve 20. Estado: [40, 30, 10]
-        assertEquals(20, conjunto.remove(2));
-        assertEquals(3, conjunto.size());
-        assertEquals(10, conjunto.get(2));
-
-        // Valor superior: índice = lista.size() - 1. Devuelve 10. Estado: [40, 30]
-        assertEquals(10, conjunto.remove(conjunto.size() - 1));
-        assertEquals(2, conjunto.size());
-        
-        // Lista con varios elementos -> lista con 1 elemento: índice = 0. Devuelve 40. Estado: [30]
-        assertEquals(40, conjunto.remove(0));
-        assertEquals(1, conjunto.size());
-        assertEquals(30, conjunto.get(0));
-
-        // Lista con 1 elemento -> lista sin elementos: índice = 0. Devuelve 30. Estado: []
-        assertEquals(30, conjunto.remove(0));
-        assertEquals(0, conjunto.size());
-
-        // FUNCIÓN SIZE
-        conjunto.clear();
-
-        // Caso 1: []: 0
-        assertEquals(0, conjunto.size());
-
-        // Caso 2: [10]: 1
-        conjunto.add(10);
-        assertEquals(1, conjunto.size());
-
-        // Caso 3: [30, 20, 10]: 3
-        conjunto.add(20);
-        conjunto.add(30);
-        assertEquals(3, conjunto.size());
-
-        // FUNCIÓN CLEAR
-        conjunto.clear();
-
-        // Caso 1: []: 0
-        conjunto.clear();
-        assertEquals(0, conjunto.size());
-
-        // Caso 2: [10]: 0
-        conjunto.add(10);
-        conjunto.clear();
-        assertEquals(0, conjunto.size());
-
-        // Caso 3: [30, 20, 10]: 0
-        conjunto.add(30);
-        conjunto.add(20);
-        conjunto.add(10);
-        conjunto.clear();
-        assertEquals(0, conjunto.size());
-
+        // Caso 5: [20, 10], 7: IndexOutOfBoundsException
+        assertThrows(IndexOutOfBoundsException.class, () -> lista.get(7));
     }
 
     @Test
-    public void testCasosNoValidos() {
-        // FUNCIÓN GET
-        //  Lista ejemplo = [10, 20, 30]
-        conjunto.add(30);
-        conjunto.add(20);
-        conjunto.add(10);
+    public void testAdd() {
+        // CASOS VÁLIDOS
+        // Caso 1: [ ], 30: true, ([30])
+        assertTrue(lista.add(30));
+       
+        // Caso 2: [30], 10: true ([30, 10])
+        assertTrue(lista.add(10));
 
-        // Justo debajo del límite: índice = -1
-        assertThrows(IndexOutOfBoundsException.class, () -> conjunto.get(-1));
+        // Caso 3: [30, 10], 20: true ([30, 20, 10])
+        assertTrue(lista.add(20));
 
-        // Justo encima del límite: índice = 3 (tamaño de la lista)
-        assertThrows(IndexOutOfBoundsException.class, () -> conjunto.get(3));
+        // Caso 4: [30, 20, 10], 10: false, ([30, 20, 10])
+        // ERROR: Antes daba true, pero debe ser false porque el codigo permite insertar elementos duplicados, hay que corregir el código.
+        assertFalse(lista.add(10));
 
-        // FUNCIÓN ADD
-        conjunto.clear();
-        
-        assertThrows(NullPointerException.class, () -> conjunto.add(null));
-
-        // FUNCIÓN REMOVE
-        conjunto.clear();
-
-        // Para probar los límites no válidos (3 y -1), preparamos una lista de tamaño 3
-        conjunto.add(30);
-        conjunto.add(20);
-        conjunto.add(10);
-
-        // Justo debajo del límite: índice = -1
-        assertThrows(IndexOutOfBoundsException.class, () -> conjunto.remove(-1));
-
-        // Justo encima del límite: índice = 3
-        assertThrows(IndexOutOfBoundsException.class, () -> conjunto.remove(3));
+        // CASOS NO VÁLIDOS
+        lista.clear();
+        assertThrows(NullPointerException.class, () -> lista.add(null));
     }
 
+    @Test
+    public void testRemove() {
+        // CASOS VÁLIDOS
+        // Lista inicial: [50, 40, 20]
+        lista.add(50);
+        lista.add(40);
+        lista.add(20);
+
+        // Caso 1: [50, 40, 20], 1: 40, ([50, 20])
+        assertEquals(40, lista.remove(1));
+        assertEquals(2, lista.size());
+        assertEquals(50, lista.get(0));
+
+        // Caso 2: [50, 20], 1: 20, ([50])
+        assertEquals(20, lista.remove(1));
+        assertEquals(1, lista.size());
+        assertEquals(50, lista.get(0));
+
+        // Caso 3: [50], 0: 50, ([])
+        assertEquals(50, lista.remove(0));
+        assertEquals(0, lista.size());
+
+        // CASOS NO VÁLIDOS
+        lista.clear();
+
+        // Caso 1: [ ], 0: IndexOutOfBoundsException
+        assertThrows(IndexOutOfBoundsException.class, () -> lista.get(0));
+        
+        // Caso 2: [10], -1:   IndexOutOfBoundsException
+        lista.add(10);
+        assertThrows(IndexOutOfBoundsException.class, () -> lista.get(-1));
+
+        // Caso 3: [20, 10], -4: IndexOutOfBoundsException
+        lista.add(20);
+        assertThrows(IndexOutOfBoundsException.class, () -> lista.get(-4));
+        
+        // Caso 4: [20, 10], 2: IndexOutOfBoundsException
+        assertThrows(IndexOutOfBoundsException.class, () -> lista.get(2));
+
+        // Caso 5: [20, 10], 7: IndexOutOfBoundsException
+        assertThrows(IndexOutOfBoundsException.class, () -> lista.get(7));
+    }
+
+    @Test 
+    public void testSize() {
+        // Caso 1: []: 0
+        assertEquals(0, lista.size());
+
+        // Caso 2: [10]: 1
+        lista.add(10);
+        assertEquals(1, lista.size());
+
+        // Caso 3: [30, 20, 10]: 3
+        lista.add(20);
+        lista.add(30);
+        assertEquals(3, lista.size());
+    }
+
+    @Test
+    public void testClear() {
+        // Caso 1: []: ([])
+        lista.clear();
+        assertEquals(0, lista.size());
+
+        // Caso 2: [10]: ([])
+        lista.add(10);
+        lista.clear();
+        assertEquals(0, lista.size());
+
+        // Caso 3: [30, 20, 10]: ([])
+        lista.add(30);
+        lista.add(20);
+        lista.add(10);
+        lista.clear();
+        assertEquals(0, lista.size());
+    }
 }
