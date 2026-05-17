@@ -17,7 +17,9 @@ public class Conductor {
 
 	public Conductor(String dni, String nombre, String apellido1,
 			String apellido2, String direccion) {
-		if (dni == null || nombre == null || apellido1 == null || direccion == null) {
+		
+		// WMC = 1, CCog = 0
+		if (dni == null || nombre == null || apellido1 == null || direccion == null) { // WMC + 4, CCog + 2
 			throw new IllegalArgumentException();
 		}
 		this.dni = dni;
@@ -25,57 +27,60 @@ public class Conductor {
 		this.apellido1 = apellido1;
 		this.apellido2 = apellido2;
 		this.dire = direccion;
+		// WMC = 5 CCog = 2
 	}
 
 	public String dni() {
-		return dni;
+		return dni; // WMC = 1, CCog = 0
 	}
 
 	public String getDni() {
-		return dni;
+		return dni; // WMC = 1, CCog = 0
 	}
 
 	public String getNombre() {
-		return nombre;
+		return nombre; // WMC = 1, CCog = 0
 	}
 
 	public String getApellido1() {
-		return apellido1;
+		return apellido1; // WMC = 1, CCog = 0
 	}
 
 	public String apellido2() {
-		return apellido2;
+		return apellido2; // WMC = 1, CCog = 0
 	}
 
 	public String getDire() {
-		return dire;
+		return dire; // WMC = 1, CCog = 0
 	}
 
 	public double sueldo() {
+		// WMC = 1, CCog = 0
 		double sueldoTransportes = 0;
-		for (Transporte t : transportes) {
+		for (Transporte t : transportes) { // WMC + 1, CCog + 1
 			double sueldoExtraTransporte = 0.0;
-			switch (t.categoria()) {
-				case Mercancias:
+			switch (t.categoria()) { // CCog + 2
+				case Mercancias: // WMC + 1
 					sueldoExtraTransporte = t.ton() * 2;
 					break;
-				case MercanciasPeligrosas:
+				case MercanciasPeligrosas: // WMC + 1
 					sueldoExtraTransporte = t.ton() * 2 + 50;
 					break;
-				case Personas:
-					if (t.getPersonas() < 10)
+				case Personas: // WMC + 1, CCog + 1
+					if (t.getPersonas() < 10) // WMC + 1, CCog + 3
 						sueldoExtraTransporte = t.horas() * 0.5;
-					else
+					else // WMC + 1, CCog + 1
 						sueldoExtraTransporte = t.horas();
 					break;
 			}
 			sueldoTransportes += t.horas() * 5 + sueldoExtraTransporte;
 		}
+		// WMC = 7 CCog = 7
 		return 700 + sueldoTransportes;
 	}
 
 	public void anhadeTransporte(Transporte t) {
-		transportes.add(t);
+		transportes.add(t); // WMC = 1, CCog = 0
 	}
 
 }

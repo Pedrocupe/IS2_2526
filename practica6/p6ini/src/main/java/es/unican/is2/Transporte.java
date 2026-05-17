@@ -17,31 +17,35 @@ public class Transporte {
 	 * representa las toneladas
 	 */ 
 	public Transporte(double horas, CategoriaTransporte cat, int valor) throws IllegalArgumentException {
-		if (horas <= 0 || valor <= 0 || cat == null) {
+
+		// WMC = 1, CCog = 0
+		if (horas <= 0 || valor <= 0 || cat == null) { // WMC + 3, CCog + 2
 			throw new IllegalArgumentException();
 		}
 		this.horas = horas;
 		this.cat = cat;
-		if (cat.equals(CategoriaTransporte.Personas)) {
+		if (cat.equals(CategoriaTransporte.Personas)) { // WMC + 1, CCog + 1
 			this.personas = valor;
-		} else  {
+		} else  { // WMC + 1, CCog + 1
 			this.ton = valor;
 		}
+
+		// WMC = 6 CCog = 4
 	}
 	
-	public double horas() {
+	public double horas() { // WMC = 1
 		return horas;
 	}
 
-	public CategoriaTransporte categoria() {
+	public CategoriaTransporte categoria() { // WMC = 1
 		return cat;
 	}
 
-	public int ton() {
+	public int ton() { // WMC = 1
 		return ton;
 	}
 
-	public int getPersonas() {
+	public int getPersonas() { // WMC = 1
 		return personas;
 	}
 	
