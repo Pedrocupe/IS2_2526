@@ -17,20 +17,20 @@ public class ConductorTest {
 	public void testConstructor() {
 		// Casos validos
 		sut= new Conductor("123123123X", "Pepe", "Martinez", "Fernandez", "Avda. de los Castros s/n" );
-		assertEquals("123123123X", sut.dni());
+		assertEquals("123123123X", sut.getDni());
 		assertEquals("123123123X", sut.getDni());
 		assertEquals("Pepe", sut.getNombre());
 		assertEquals("Martinez", sut.getApellido1());
 		assertEquals("Fernandez", sut.apellido2());
-		assertEquals("Avda. de los Castros s/n", sut.getDire());
+		assertEquals("Avda. de los Castros s/n", sut.getDireccion());
 
 		sut= new Conductor("123123123X", "Pepe", "Martinez", null, "Avda. de los Castros s/n" );
-		assertEquals("123123123X", sut.dni());
+		assertEquals("123123123X", sut.getDni());
 		assertEquals("123123123X", sut.getDni());
 		assertEquals("Pepe", sut.getNombre());
 		assertEquals("Martinez", sut.getApellido1());
 		assertNull(sut.apellido2());
-		assertEquals("Avda. de los Castros s/n", sut.getDire());
+		assertEquals("Avda. de los Castros s/n", sut.getDireccion());
 
 		// Casos no validos
 		assertThrows(IllegalArgumentException.class, () -> new Conductor(null, "Pepe", "Martinez", "Fernandez", "Avda. de los Castros s/n" ));

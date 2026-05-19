@@ -4,7 +4,7 @@ package es.unican.is2;
 public class Transporte {
 	
 	private double horas;
-	private int ton;
+	private int tonelada;
 	private int personas;
 	private CategoriaTransporte cat;
 	
@@ -27,22 +27,22 @@ public class Transporte {
 		if (cat.equals(CategoriaTransporte.Personas)) { // WMC + 1, CCog + 1
 			this.personas = valor;
 		} else  { // WMC + 1, CCog + 1
-			this.ton = valor;
+			this.tonelada = valor;
 		}
 
 		// WMC = 6 CCog = 4
 	}
 	
-	public double horas() { // WMC = 1
+	public double getHoras() { // WMC = 1
 		return horas;
 	}
 
-	public CategoriaTransporte categoria() { // WMC = 1
+	public CategoriaTransporte getCategoria() { // WMC = 1
 		return cat;
 	}
 
-	public int ton() { // WMC = 1
-		return ton;
+	public int getTonelada() { // WMC = 1
+		return tonelada;
 	}
 
 	public int getPersonas() { // WMC = 1
