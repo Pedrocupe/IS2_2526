@@ -57,7 +57,7 @@ public class Conductor {
 		return apellido1; // WMC = 1, CCog = 0
 	}
 
-	public String apellido2() {
+	public String getApellido2() {
 		return apellido2; // WMC = 1, CCog = 0
 	}
 
